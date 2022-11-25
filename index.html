@@ -87,21 +87,89 @@
     </section>
   </main>
 
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
   <script>
+    window.TrackJS && TrackJS.install({ 
+      token: "27aeec1d936b43599b16cc10c87961af"
+      // for more configuration options, see https://docs.trackjs.com
+    });
+  </script>         
+  <script>
+    window.onerror = () => {
+      console.log("Window error handler triggered");
+    }
+    
+    TrackJS.track('Testing TrackJS!');
+
     let form = document.querySelector('form');
+
     form.addEventListener('submit', e => {
       e.preventDefault();
       let output = document.querySelector('output');
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+
+      const regExp = /[a-zA-Z]/g;
+
+      // part 3
+      try {
+        // part 4
+        // catch when letters are present
+        if(regExp.test(firstNum) || regExp.test(secondNum)) {
+          throw new LetterUsed("There is a letter in the first or second number");
+        }
+
+        // could be triggered by using some non alphanumeric character in the input
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      }
+      catch (err) {
+        console.group("Catch");
+        console.error(err);
+        console.groupEnd();
+      }
+      finally {
+        console.log("Finally");
+      }
     });
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
 
     // Start your code here
     // You may move this JS to another file if you wish
+
+    // part 2
+    const consoleFunctions = [
+      function() {console.log("console log demo")},
+      function() {console.error("console error demo")},
+      function() {console.count()},
+      function() {console.warn("console warn demo")},
+      function() {console.assert(3 > 5, "console assert demo")},
+      function() {console.clear()},
+      function() {console.dir(document.location)},
+      function() {console.dirxml(document.querySelector("#error-btns"))},
+      function() {console.group()},
+      function() {console.groupEnd()},
+      function() {console.table(["value 1", "value 2", "value 3"])},
+      function() {console.time()},
+      function() {console.timeEnd()},
+      function() {console.trace()},
+      function() {x = y},
+    ];
+
+    for(let i = 0; i < errorBtns.length; i++) {
+      errorBtns[i].onclick = () => consoleFunctions[i]();
+    }
+
+    // part 4
+    class LetterUsed extends Error {
+      constructor(message) {
+        super(message);
+        this.name = "LetterUsed";
+      }
+    }
+
+
   </script>
 </body>
 
